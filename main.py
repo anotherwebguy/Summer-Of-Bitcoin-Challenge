@@ -68,6 +68,6 @@ if __name__ == '__main__':
     parsed_list = parse_mempool_csv()
     sorted_list = sorting_MempoolTransactions(parsed_list)
     final_list = generate_finallist(sorted_list)
-    #write_blockfile(final_list)
+    write_blockfile(final_list)
 
 
