@@ -9,10 +9,17 @@ class MempoolTransaction():
         self.weight = int(weight)
         self.sortvalue = round((float(fee)/float(weight)),4)
         self.parents = parents
-        if parents in all_transactions:
+        count=0
+        if parents == " " :
             self.isvalid = True
         else:
-            self.isvalid = False   
+            for i in parents:
+                if i in all_transactions:
+                    count+=1
+            if count == len(parents):
+                self.isvalid = True
+            else:
+                self.isvalid = False              
 
     def get_txid(self):
         return self.txid
@@ -43,15 +50,19 @@ def sorting_MempoolTransactions(transactions):
 
 def generate_finallist(sortedlist):
     curr_sum = 0
+    total_fee = 0
     final_list = []
     for i in sortedlist:
         curr_sum+=i.get_weight()
         if curr_sum < 4000000 and i.get_isvalid():
+            total_fee+=i.get_fee()
             final_list.append(i)
         else:
-            curr_sum-=i.get_weight()    
+            curr_sum-=i.get_weight()   
+            total_fee-=i.get_fee() 
             
-    print(f"Total weight: {curr_sum}")         
+    print(f"Total weight: {curr_sum}")       
+    print(f"Total maximized fees: {total_fee}")  
     print(f"Total valid transaction: {len(final_list)}")   
     return final_list
 
@@ -61,8 +72,7 @@ def write_blockfile(finallist):
             for w in finallist:
                     b.write(w.get_txid())
                     b.write("\n")
-                
- 
+                    
 
 if __name__ == '__main__':
     parsed_list = parse_mempool_csv()
