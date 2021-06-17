@@ -7,19 +7,19 @@ class MempoolTransaction():
         all_transactions.append(txid)
         self.fee = int(fee)
         self.weight = int(weight)
-        self.sortvalue = round((float(fee)/float(weight)),4)
+        self.sortvalue = round((float(fee)/float(weight)),5)
         self.parents = parents
-        count=0
-        if parents == " " :
-            self.isvalid = True
-        else:
-            for i in parents:
+        if parents != "" :
+            check_parents = parents.split(';')
+            for i in check_parents:
                 if i in all_transactions:
-                    count+=1
-            if count == len(parents):
-                self.isvalid = True
-            else:
-                self.isvalid = False              
+                    self.isvalid = True
+                else:
+                    self.isvalid = False      
+                    break
+        else:
+            self.isvalid = True
+               
 
     def get_txid(self):
         return self.txid
@@ -34,7 +34,10 @@ class MempoolTransaction():
         return self.sortvalue
 
     def get_isvalid(self):
-        return self.isvalid    
+        return self.isvalid   
+
+    def get_parents(self):
+        return self.parents     
         
 
 def parse_mempool_csv():
@@ -53,13 +56,10 @@ def generate_finallist(sortedlist):
     total_fee = 0
     final_list = []
     for i in sortedlist:
-        curr_sum+=i.get_weight()
-        if curr_sum < 4000000 and i.get_isvalid():
+        if curr_sum + i.get_weight() < 4000000 and i.get_isvalid() == True:
+            curr_sum+=i.get_weight()
             total_fee+=i.get_fee()
             final_list.append(i)
-        else:
-            curr_sum-=i.get_weight()   
-            total_fee-=i.get_fee() 
             
     print(f"Total weight: {curr_sum}")       
     print(f"Total maximized fees: {total_fee}")  
@@ -72,7 +72,7 @@ def write_blockfile(finallist):
             for w in finallist:
                     b.write(w.get_txid())
                     b.write("\n")
-                    
+                   
 
 if __name__ == '__main__':
     parsed_list = parse_mempool_csv()
