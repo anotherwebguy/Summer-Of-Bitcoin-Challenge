@@ -18,4 +18,4 @@ Then the sorted list is put under a method to generate the final list which cont
  ## Solution
   ![sol](https://user-images.githubusercontent.com/66346161/122337641-3b136600-cf5c-11eb-975b-6156373a4e90.png)
   
-  So it includes a total of <b>3214</b> transactions with maximized fee as <b>5769626<b/> and total weight <b>3999940<b/> which doesn't exceeds 4000000
+  So it includes a total of <b>3214</b> transactions with maximized fee as <b>5769626</b> and total weight <b>3999940</b> which doesn't exceeds <b>4000000</b>
